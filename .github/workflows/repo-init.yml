@@ -1,0 +1,31 @@
+name: Repository Initialization
+
+on:
+  workflow_dispatch:
+  create:
+    ref_type: "repository"
+
+jobs:
+  create_folder:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+
+      - name: Create folder with repository name
+        run: |
+          repo_name=$(basename ${GITHUB_REPOSITORY})
+          mkdir -p $repo_name
+          echo "Folder '$repo_name' created."
+
+      - name: Add a placeholder file in the folder
+        run: |
+          repo_name=$(basename ${GITHUB_REPOSITORY})
+          touch "$repo_name/.gitkeep"
+          echo "Placeholder file '.gitkeep' added to $repo_name."
+          echo $GITHUB_TOKEN
+
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Initialize repository"

@@ -1,0 +1,67 @@
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    # Ruff version.
+    rev: v0.11.1
+    hooks:
+      # Run the linter.
+      - id: ruff
+        types_or: [python, pyi] # To prevent from running on jupyter notebooks
+        args: [--fix]
+      # Import sorting & fixing is not done yet so has to be apart from the rest
+      # - id: ruff
+      #   args: ["check", "--select", "I", "--fix"]
+      #   files: "^backend/"
+      # Run the formatter.
+      - id: ruff-format
+        types_or: [python, pyi] # To prevent from running on jupyter notebooks
+#   - repo: https://github.com/pre-commit/pre-commit-hooks
+#     rev: v5.0.0
+#     hooks:
+#       - id: trailing-whitespace
+#       - id: end-of-file-fixer
+#       - id: check-yaml
+#       - id: check-added-large-files
+#
+#   - repo: https://github.com/PyCQA/autoflake
+#     rev: v2.3.1
+#     hooks:
+#       - id: autoflake
+#         args:
+#           [
+#             --remove-all-unused-imports,
+#             --remove-unused-variables,
+#             --ignore-init-module-imports,
+#             --in-place,
+#             --exclude,
+#             "**/path/to/ignore/*.py",
+#           ]
+#         name: autoflake (remove unused imports)
+#
+#   - repo: https://github.com/pycqa/isort
+#     rev: 5.12.0
+#     hooks:
+#       - id: isort
+#         name: isort (auto format python imports)
+#         args: ["--profile", "black"]
+#
+#   - repo: https://github.com/psf/black
+#     rev: 25.1.0
+#     hooks:
+#       - id: black
+#         name: black (auto format python code)
+#
+#   - repo: https://github.com/kynan/nbstripout
+#     rev: 0.8.1
+#     hooks:
+#       - id: nbstripout
+#         name: nbstripout (auto remove output cells in notebooks)
+#
+#   - repo: local
+#     hooks:
+#       - id: pytest-check
+#         name: Python tests
+#         entry: uvx pytest
+#         language: system
+#         pass_filenames: false
+#         always_run: true
+#
