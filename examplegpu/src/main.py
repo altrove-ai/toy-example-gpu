@@ -39,8 +39,9 @@ def main() -> None:
 
     # Train the model
     wandb_config = {"learning_rate": learning_rate}
+    run_name = f"run_{os.getenv('SLURM_ARRAY_TASK_ID')}_{os.getenv('SLURM_JOB_ID')}"
     with WandbLogger(
-        project_name="test_run_horace", run_name=f"runpid_{os.getpid()}", config=wandb_config
+        project_name="test_run_horace", run_name=run_name, config=wandb_config
     ) as logger:
         model_train(
             model=model,
