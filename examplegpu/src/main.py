@@ -2,11 +2,14 @@ import os
 
 import torch
 from dataloader.mnist_dataloader import MNISTDataLoader
+from dotenv import load_dotenv
 from logger import WandbLogger
 from model_test import model_test
 from model_train import model_train
 from models.cnn import CNN, CNNConfig
 from torch import nn, optim
+
+load_dotenv()
 
 
 def main() -> None:
