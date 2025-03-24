@@ -38,12 +38,12 @@ def main() -> None:
     model = model.to(device)  # Move model to GPU
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adagrad(model.parameters(), lr=learning_rate)
+    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
 
     # Train the model
     wandb_config = {
         "learning_rate": learning_rate,
-        "optimizer": "adagrad",
+        "optimizer": "sgd",
     }
     run_name = f"run_{os.getenv('SLURM_JOB_ID')}_{os.getenv('SLURM_PROCID')}"
     with WandbLogger(
