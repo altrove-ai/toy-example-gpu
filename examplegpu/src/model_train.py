@@ -1,4 +1,5 @@
 import torch
+from logger import Logger
 from torch import nn, optim
 from torch.utils.data import DataLoader
 
@@ -9,6 +10,7 @@ def model_train(
     criterion: nn.Module,
     optimizer: optim.Optimizer,
     device: torch.device,
+    logger: Logger,
     num_epochs: int = 5,
 ) -> None:
     """Train the model on the training data."""
@@ -36,6 +38,15 @@ def model_train(
             total += labels.size(0)
             correct += (predicted == labels).sum().item()
 
+        actual_loss = running_loss / len(data_loader)
+        accuracy = 100 * correct / total
         print(
-            f"Epoch [{epoch + 1}/{num_epochs}], Loss: {running_loss / len(data_loader):.4f}, Accuracy: {100 * correct / total:.2f}%"
+            f"Epoch [{epoch + 1}/{num_epochs}], Loss: {actual_loss:.4f}, Accuracy: {accuracy:.2f}%"
+        )
+        logger.log(
+            {
+                "epoch": epoch,
+                "loss": actual_loss,
+                "accuracy": accuracy,
+            }
         )

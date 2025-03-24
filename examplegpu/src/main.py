@@ -1,5 +1,8 @@
+import os
+
 import torch
 from dataloader.mnist_dataloader import MNISTDataLoader
+from logger import WandbLogger
 from model_test import model_test
 from model_train import model_train
 from models.cnn import CNN, CNNConfig
@@ -35,14 +38,19 @@ def main() -> None:
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     # Train the model
-    model_train(
-        model=model,
-        data_loader=train_loader,
-        criterion=criterion,
-        optimizer=optimizer,
-        device=device,
-        num_epochs=num_epochs,
-    )
+    wandb_config = {"learning_rate": learning_rate}
+    with WandbLogger(
+        project_name="test_run_horace", run_name=f"runpid_{os.getpid()}", config=wandb_config
+    ) as logger:
+        model_train(
+            model=model,
+            data_loader=train_loader,
+            criterion=criterion,
+            optimizer=optimizer,
+            device=device,
+            logger=logger,
+            num_epochs=num_epochs,
+        )
 
     # Test the model
     model_test(model, test_loader, device)
