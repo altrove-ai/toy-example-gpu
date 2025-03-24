@@ -15,8 +15,6 @@ load_dotenv()
 def main() -> None:
     """Main function to load data, train and test the model."""
     # Set up the configuration
-    print(os.getpid(), os.getenv("SLURM_PROCID"))
-    return
     batch_size: int = 64
     num_epochs: int = 5
     learning_rate: float = 0.001
@@ -44,7 +42,7 @@ def main() -> None:
 
     # Train the model
     wandb_config = {"learning_rate": learning_rate}
-    run_name = f"run_{os.getenv('SLURM_ARRAY_TASK_ID')}_{os.getenv('SLURM_JOB_ID')}"
+    run_name = f"run_{os.getenv('SLURM_JOB_ID')}_{os.getenv('SLURM_PROCID')}"
     with WandbLogger(
         project_name="test_run_horace", run_name=run_name, config=wandb_config
     ) as logger:
