@@ -8,4 +8,4 @@
 #SBATCH --cpus-per-gpu=12      
 #SBATCH --mem=32G
 
-srun uv run /examplegpu/src/main.py
+srun uv run /home/horace/data/code/test_optim_gpu/toy-example-gpu/examplegpu/src/main.py
