@@ -9,6 +9,10 @@ from torch import nn, optim
 def main() -> None:
     """Main function to load data, train and test the model."""
     # Set up the configuration
+    import os
+
+    print(os.getcwd())
+    raise ValueError
     batch_size: int = 64
     num_epochs: int = 5
     learning_rate: float = 0.001
