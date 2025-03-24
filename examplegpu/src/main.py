@@ -41,7 +41,10 @@ def main() -> None:
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     # Train the model
-    wandb_config = {"learning_rate": learning_rate}
+    wandb_config = {
+        "learning_rate": learning_rate,
+        "optimizer": "adam",
+    }
     run_name = f"run_{os.getenv('SLURM_JOB_ID')}_{os.getenv('SLURM_PROCID')}"
     with WandbLogger(
         project_name="test_run_horace", run_name=run_name, config=wandb_config
