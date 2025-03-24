@@ -14,7 +14,7 @@ curl -LsSf https://astral.sh/uv/install.sh | sudo sh
 # MacOS
 brew install uv
 
-# Otherwise :
+# Otherwise (above methods make uv update automatically with sudo apt update or brew update):
 pip install uv
 ```
 ### Git submodule
@@ -48,18 +48,18 @@ To install pre-commit hooks, run:
 
 To add pre-commit hooks to the repository, run:
 ```bash
-pre-commit install
+uvx pre-commit install
 ```
 Then, you can run pre-commit hooks on staged files by running:
 ```bash
 git add my_file.py  # Staging file
-pre-commit run      # Running pre-commit hooks on staged files
+uvx pre-commit run      # Running pre-commit hooks on staged files
 ```
 
 You can run the pre-commit hooks on all files as well. 
 > **WARNING** : Pre-commit will format all files that it sees having issues, and can potentially change files everywhere in your repository, be ready to handle those changes.
 ```bash
-pre-commit run --all-files
+uvx pre-commit run --all-files
 ```
 
 ### Ruff
