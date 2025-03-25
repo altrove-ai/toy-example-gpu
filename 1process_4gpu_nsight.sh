@@ -12,4 +12,4 @@
 PROFILE_OUTPUT="/home/horace/data/code/test_optim_gpu/toy-example-gpu/_logs/profile_result"
 
 # Start profiling using cudaProfilerApi (triggered by cudaProfilerStart/Stop in the application)
-nsys profile -c cudaProfilerApi --output=$PROFILE_OUTPUT --gpu-metrics-devices="cuda-visible" srun uv run /home/horace/data/code/test_optim_gpu/toy-example-gpu/examplegpu/src/main.py
+nsys profile -c none --output=$PROFILE_OUTPUT --gpu-metrics-devices="cuda-visible" srun uv run /home/horace/data/code/test_optim_gpu/toy-example-gpu/examplegpu/src/main.py
