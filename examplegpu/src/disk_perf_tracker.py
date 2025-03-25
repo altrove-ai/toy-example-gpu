@@ -39,7 +39,6 @@ class DiskPerformanceTracker:
             try:
                 all_disk_data = psutil.disk_io_counters(perdisk=True)
                 disk_data_: list[int]
-                print(f"zzz, all_disk_data: {all_disk_data}")
                 for disk_path_, disk_data_ in all_disk_data.items():
                     if disk_path_ in self.disk_names:
                         writer.writerow(
