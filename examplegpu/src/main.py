@@ -25,7 +25,7 @@ def main() -> None:
         "optimizer": "adam",
     }
     run_name = f"run_{os.getenv('SLURM_JOB_ID', '0')}_{os.getenv('SLURM_PROCID', '0')}"
-    logger = LocalLogger(f"logs/{run_name}.log")
+    logger = LocalLogger(f"_logs/{run_name}.log")
     # logger = WandbLogger(project_name="test_run_horace", run_name=run_name, config=wandb_config)
 
     model_config = CNNConfig()
