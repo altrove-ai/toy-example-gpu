@@ -26,12 +26,8 @@ def load_data_with_dali(batch_size=32, num_threads=4, device_id=0, data_dir="ran
 
         # Use ExternalSource to load the data from the .pt files
         data = dali.ops.ExternalSource(source=file_list, num_outputs=1, skip_warmup=True)
-
-        # Load the data from .pt files into tensors
-        # You can apply any DALI operations here, like reshaping, normalization, etc.
-        data = dali.ops.Cast(device="gpu", dtype=types.FLOAT)(data)  # Cast to float if needed
-        # Reshape to 100x100 arrays
-        data = dali.ops.Reshape(device="gpu", shape=[-1, 100, 100])(data)
+        data = dali.ops.Cast(device="gpu", dtype=types.FLOAT)(data)  # Now properly applied after data is loaded
+        data = dali.ops.Reshape(device="gpu", shape=[-1, 100, 100])(data) 
 
         # Set pipeline outputs
         pipeline.set_outputs(data)
