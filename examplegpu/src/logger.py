@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 from abc import ABC, abstractmethod
 from typing import override
 
@@ -17,6 +18,23 @@ class Logger(ABC):
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         return
+
+
+class LocalLogger(Logger):
+    """Single process logger."""
+
+    def __init__(self, log_file: str) -> None:
+        self.log_file = log_file
+        self.file = open(self.log_file, "w")
+
+    def log(self, data: dict) -> None:
+        self.file.write(json.dumps(data) + "\n")
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, exc_type, exc_val, exc_tb):
+        self.file.close()
 
 
 class WandbLogger(Logger):

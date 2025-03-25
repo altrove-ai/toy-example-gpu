@@ -3,7 +3,7 @@ import os
 import torch
 from dataloader.mnist_dataloader import MNISTDataLoader
 from dotenv import load_dotenv
-from logger import WandbLogger
+from logger import LocalLogger, WandbLogger
 from model_test import model_test
 from model_train import model_train
 from models.cnn import CNN, CNNConfig
@@ -19,7 +19,14 @@ def main() -> None:
     num_epochs: int = 5
     learning_rate: float = 0.001
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    print(f"Device {device}")
+
+    wandb_config = {
+        "learning_rate": learning_rate,
+        "optimizer": "adam",
+    }
+    run_name = f"run_{os.getenv('SLURM_JOB_ID')}_{os.getenv('SLURM_PROCID')}"
+    logger = LocalLogger(f"logs/{run_name}.log")
+    # logger = WandbLogger(project_name="test_run_horace", run_name=run_name, config=wandb_config)
 
     model_config = CNNConfig()
 
@@ -38,17 +45,10 @@ def main() -> None:
     model = model.to(device)  # Move model to GPU
 
     criterion = nn.CrossEntropyLoss()
-    optimizer = optim.SGD(model.parameters(), lr=learning_rate)
+    optimizer = optim.Adam(model.parameters(), lr=learning_rate)
 
     # Train the model
-    wandb_config = {
-        "learning_rate": learning_rate,
-        "optimizer": "sgd",
-    }
-    run_name = f"run_{os.getenv('SLURM_JOB_ID')}_{os.getenv('SLURM_PROCID')}"
-    with WandbLogger(
-        project_name="test_run_horace", run_name=run_name, config=wandb_config
-    ) as logger:
+    with logger:
         model_train(
             model=model,
             data_loader=train_loader,
