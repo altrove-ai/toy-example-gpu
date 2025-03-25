@@ -1,5 +1,5 @@
 import os
-
+import time
 import nvidia.dali as dali
 import torch
 from dataloader.mnist_dataloader import MNISTDataLoader
@@ -51,7 +51,10 @@ def main() -> None:
     learning_rate: float = 0.001
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    t_start = time.time()
     useless_data = load_data_with_dali()
+    print(f"Loading useless data time: {time.time() - t_start:.2f}")
+
     wandb_config = {
         "learning_rate": learning_rate,
         "optimizer": "adam",
