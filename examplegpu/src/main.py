@@ -1,5 +1,6 @@
 import os
 
+import nvidia.dali as dali
 import torch
 from dataloader.mnist_dataloader import MNISTDataLoader
 from dotenv import load_dotenv
@@ -7,9 +8,39 @@ from logger import LocalLogger, WandbLogger
 from model_test import model_test
 from model_train import model_train
 from models.cnn import CNN, CNNConfig
+from nvidia.dali import types
 from torch import nn, optim
 
 load_dotenv()
+
+
+def load_data_with_dali(batch_size=32, num_threads=4, device_id=0, data_dir="random_dataset"):
+    # Define the DALI Pipeline
+    pipeline = dali.pipeline.Pipeline(
+        batch_size=batch_size, num_threads=num_threads, device_id=device_id
+    )
+
+    with pipeline:
+        # List all the .pt files in the directory (where your random arrays are saved)
+        file_list = [os.path.join(data_dir, f) for f in os.listdir(data_dir) if f.endswith(".pt")]
+
+        # Use ExternalSource to load the data from the .pt files
+        data = dali.ops.ExternalSource(source=file_list, num_outputs=1, skip_warmup=True)
+
+        # Load the data from .pt files into tensors
+        # You can apply any DALI operations here, like reshaping, normalization, etc.
+        data = dali.ops.Cast(device="gpu", dtype=types.FLOAT)(data)  # Cast to float if needed
+        # Reshape to 100x100 arrays
+        data = dali.ops.Reshape(device="gpu", shape=[-1, 100, 100])(data)
+
+        # Set pipeline outputs
+        pipeline.set_outputs(data)
+
+    pipeline.build()
+    for _ in range(10):
+        data = pipeline.run()
+        print(data[0].shape)
+    return data
 
 
 def main() -> None:
@@ -20,6 +51,7 @@ def main() -> None:
     learning_rate: float = 0.001
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+    useless_data = load_data_with_dali()
     wandb_config = {
         "learning_rate": learning_rate,
         "optimizer": "adam",
