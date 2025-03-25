@@ -18,7 +18,7 @@ class DiskPerformanceTracker:
         time_interval: float = 0.5,
     ) -> None:
         self.fp = file_path
-        self.disk_names = disk_names
+        self.disk_names = [disk_name_.split("/")[-1] for disk_name_ in disk_names]
         self.silent = silent
         self.time_interval = time_interval
         self.field_names = [
@@ -32,21 +32,27 @@ class DiskPerformanceTracker:
 
     def run(self) -> None:
         csvfile = open(self.fp, "w", newline="")
-        writer = csv.DictWriter(csvfile, fieldnames=self.field_names)
+        writer = csv.DictWriter(csvfile, fieldnames=["disk", "t", *self.field_names])
+        writer.writeheader()
 
         t_start: float = time.time()
         while True:
             try:
                 all_disk_data = psutil.disk_io_counters(perdisk=True)
                 disk_data_: list[int]
-                for disk_path_, disk_data_ in all_disk_data.items():
-                    if disk_path_ in self.disk_names:
+                t: float = time.time()
+                for disk_name_, disk_data_ in all_disk_data.items():
+                    if disk_name_ in self.disk_names:
                         writer.writerow(
                             {
-                                field_name_: field_value_
-                                for field_name_, field_value_ in zip(
-                                    self.field_names, disk_data_, strict=False
-                                )
+                                "disk": disk_name_,
+                                "t": t,
+                                **{
+                                    field_name_: field_value_
+                                    for field_name_, field_value_ in zip(
+                                        self.field_names, disk_data_, strict=False
+                                    )
+                                },
                             }
                         )
                 if not self.silent:
