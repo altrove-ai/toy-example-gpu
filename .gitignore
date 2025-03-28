@@ -5,3 +5,5 @@ __pycache__/
 _data/
 wandb/
 _logs/
+random_data/
+.ruff_cache/
